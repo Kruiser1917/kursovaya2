@@ -1,6 +1,6 @@
-# src/json_file_manager.py
 import json
 from .file_manager import FileManager
+
 
 class JSONFileManager(FileManager):
     def __init__(self, filename: str):

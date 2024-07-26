@@ -1,6 +1,6 @@
-# src/hh_client.py
 import requests
 from .api_client import JobAPI
+
 
 class HHClient(JobAPI):
     def __init__(self):

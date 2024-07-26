@@ -1,5 +1,5 @@
-# src/file_manager.py
 from abc import ABC, abstractmethod
+
 
 class FileManager(ABC):
     @abstractmethod

@@ -1,4 +1,3 @@
-# main.py
 from src.hh_client import HHClient
 from src.json_file_manager import JSONFileManager
 from src.vacancy import Vacancy

@@ -1,16 +1,26 @@
+import os
+import json
 from src.hh_client import HHClient
 from src.json_file_manager import JSONFileManager
 from src.vacancy import Vacancy
 
 
 def filter_vacancies_by_salary(vacancies, min_salary, max_salary):
-    return [vacancy for vacancy in vacancies if
-            (vacancy['salary']['from'] or 0) >= min_salary and (vacancy['salary']['to'] or float('inf')) <= max_salary]
+    return [
+        vacancy for vacancy in vacancies
+        if (vacancy['salary'] and vacancy['salary']['from'] or 0) >= min_salary
+           and (vacancy['salary'] and vacancy['salary']['to'] or float('inf')) <= max_salary
+    ]
 
 
 def user_interaction():
     hh_client = HHClient()
     file_manager = JSONFileManager('data/vacancies.json')
+
+    # Проверка и инициализация файла vacancies.json
+    if not os.path.exists('data/vacancies.json'):
+        with open('data/vacancies.json', 'w', encoding='utf-8') as f:
+            json.dump([], f)
 
     while True:
         print("\n1. Поиск вакансий")
@@ -31,14 +41,16 @@ def user_interaction():
         elif choice == '2':
             n = int(input("Введите количество вакансий для вывода: "))
             vacancies = file_manager.load()
-            vacancies = sorted(vacancies, key=lambda x: x['salary']['from'], reverse=True)[:n]
+            vacancies = sorted(vacancies, key=lambda x: (x['salary'] and x['salary']['from'] or 0), reverse=True)[:n]
             for vacancy in vacancies:
                 print(vacancy)
 
         elif choice == '3':
             keyword = input("Введите ключевое слово для фильтрации вакансий: ")
             vacancies = file_manager.load()
-            filtered_vacancies = [v for v in vacancies if keyword.lower() in v['snippet']['requirement'].lower()]
+            filtered_vacancies = [v for v in vacancies if
+                                  v['snippet'] and v['snippet']['requirement'] and keyword.lower() in v['snippet'][
+                                      'requirement'].lower()]
             for vacancy in filtered_vacancies:
                 print(vacancy)
 

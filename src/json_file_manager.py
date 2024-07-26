@@ -11,8 +11,11 @@ class JSONFileManager(FileManager):
             json.dump(vacancies, f, ensure_ascii=False, indent=4)
 
     def load(self):
-        with open(self.filename, 'r', encoding='utf-8') as f:
-            return json.load(f)
+        try:
+            with open(self.filename, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except (json.JSONDecodeError, FileNotFoundError):
+            return []
 
     def delete(self, vacancy_id: str):
         vacancies = self.load()
